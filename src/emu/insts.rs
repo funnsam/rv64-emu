@@ -28,3 +28,13 @@ pub const OR  : u32 = 0x6;
 pub const AND : u32 = 0x7;
 pub const SLL : u32 = 0x1;
 pub const SRX : u32 = 0x5;
+
+pub const SUB   : (u32, u32) = (0x0, 0x20);
+pub const MUL   : (u32, u32) = (0x0, 0x01);
+pub const MULH  : (u32, u32) = (0x1, 0x01);
+pub const MULHU : (u32, u32) = (0x3, 0x01);
+pub const MULHSU: (u32, u32) = (0x2, 0x01);
+pub const DIV   : (u32, u32) = (0x4, 0x01);
+pub const DIVU  : (u32, u32) = (0x5, 0x01);
+pub const REM   : (u32, u32) = (0x6, 0x01);
+pub const REMU  : (u32, u32) = (0x7, 0x01);

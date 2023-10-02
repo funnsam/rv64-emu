@@ -30,11 +30,17 @@ impl<'a> CPU<'a> {
         }
     }
 
+    const ABI_REGS: [&str; 31] = [
+        "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0",
+        "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5",
+        "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6",
+    ];
+
     pub fn dump_regs(&self) {
         println!("pc:\t{:016x}", self.pc);
         for i in 1..32 {
             if self.reg[i-1] != 0 {
-                println!("x{i}:\t{:016x}", self.reg[i-1]);
+                println!("{}:\t{:016x}", Self::ABI_REGS[i-1], self.reg[i-1]);
             } else if *self.reg.get(i-2).unwrap_or(&1) != 0 {
                 println!("...");
             }
@@ -106,7 +112,6 @@ impl<'a> CPU<'a> {
                 let shamt = ((self.read_reg(rs2) & 0x3f) as u64) as u32;
                 self.write_reg(rd, match (funct3, funct7) {
                     (ADD , 0x00) => a + b,
-                    (ADD , 0x20) => a - b,
                     (SLT , 0x00) => ((a as i64) < b as i64) as u64,
                     (SLTU, 0x00) => (a < b) as u64,
                     (XOR , 0x00) => a ^ b,
@@ -115,6 +120,15 @@ impl<'a> CPU<'a> {
                     (SLL , 0x00) => a << shamt,
                     (SRX , 0x00) => a >> shamt,
                     (SRX , 0x20) => (a as i64 >> shamt) as u64,
+                    SUB    => a - b,
+                    MUL    => a * b,
+                    MULH   => ((a as u128 * b as u128) >> 64) as u64,
+                    MULHU  => ((a as i64 as i128 * b as i64 as i128) >> 64) as u64,
+                    MULHSU => ((a as i64 as i128 * b as i128) >> 64) as u64,
+                    DIV    => (a as i64 / b as i64) as u64,
+                    DIVU   => a / b,
+                    REM    => (a as i64 % b as i64) as u64,
+                    REMU   => a % b,
                     _ => Err(Error::UnsupportedInst(inst))?,
                 })
             },
@@ -140,11 +154,17 @@ impl<'a> CPU<'a> {
                 let b = self.read_reg(rs2);
                 let shamt = (b & 0x3f) as u32;
                 self.write_reg(rd, match (funct3, funct7) {
-                    (ADD, 0x00) => (a + b) as i32 as i64 as u64,
-                    (ADD, 0x20) => (a - b) as i32 as i64 as u64,
+                    (ADD, 0x00) => (a as i32 + b as i32) as i32 as i64 as u64,
                     (SLL, 0x00) => ((a as u32) << shamt) as i32 as i64 as u64,
                     (SRX, 0x00) => ((a as u32) >> shamt) as i32 as i64 as u64,
-                    (SRX, 0x20) => ((a as i32) << (shamt as i32)) as u64,
+                    (SRX, 0x20) => ((a as i32) >> (shamt as i32)) as u64,
+
+                    SUB  => (a as i32 - b as i32) as i32 as i64 as u64,
+                    MUL  => (a as u32 * b as u32) as i32 as i64 as u64,
+                    DIV  => (a as i32 / b as i32) as i32 as i64 as u64,
+                    DIVU => (a as u32 / b as u32) as i32 as i64 as u64,
+                    REM  => (a as i32 % b as i32) as i32 as i64 as u64,
+                    REMU => (a as u32 % b as u32) as i32 as i64 as u64,
                     _ => Err(Error::UnsupportedInst(inst))?,
                 })
             },
@@ -153,10 +173,10 @@ impl<'a> CPU<'a> {
                 let b = i_imm_s;
                 let shamt = ((self.read_reg(rs2) & 0x3f) as u64) as u32;
                 self.write_reg(rd, match (funct3, funct7) {
-                    (ADD, _) => (a + b) as i32 as i64 as u64,
+                    (ADD, _) => (a as i32 + b as i32) as i32 as i64 as u64,
                     (SLL, 0x00) => ((a as u32) << shamt) as i32 as i64 as u64,
                     (SRX, 0x00) => ((a as u32) >> shamt) as i32 as i64 as u64,
-                    (SRX, 0x20) => ((a as i32) << (shamt as i32)) as u64,
+                    (SRX, 0x20) => ((a as i32) >> (shamt as i32)) as u64,
                     _ => Err(Error::UnsupportedInst(inst))?,
                 })
             },
