@@ -9,6 +9,7 @@ pub const ALUI : u32 = 0x13;
 pub const ALU  : u32 = 0x33;
 pub const ALUIW: u32 = 0x1B;
 pub const ALUW : u32 = 0x3B;
+pub const AMO  : u32 = 0x2F;
 
 // load and store
 pub const B : u32 = 0x0;
@@ -38,3 +39,16 @@ pub const DIV   : (u32, u32) = (0x4, 0x01);
 pub const DIVU  : (u32, u32) = (0x5, 0x01);
 pub const REM   : (u32, u32) = (0x6, 0x01);
 pub const REMU  : (u32, u32) = (0x7, 0x01);
+
+// atomic
+pub const LR     : u32 = 0x02;
+pub const SC     : u32 = 0x03;
+pub const AMOSWAP: u32 = 0x01;
+pub const AMOADD : u32 = 0x00;
+pub const AMOXOR : u32 = 0x04;
+pub const AMOAND : u32 = 0x0C;
+pub const AMOOR  : u32 = 0x08;
+pub const AMOMIN : u32 = 0x10;
+pub const AMOMAX : u32 = 0x14;
+pub const AMOMINU: u32 = 0x18;
+pub const AMOMAXU: u32 = 0x1C;

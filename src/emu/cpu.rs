@@ -195,6 +195,13 @@ impl<'a> CPU<'a> {
                 let addr = self.read_reg(rs1) + s_imm_s;
                 self.bus.write(addr, self.read_reg(rs2), funct3 & 3)?;
             },
+            AMO => {
+                let rl = (funct7 & 1) != 0;
+                let aq = ((funct7 >> 1) & 1) != 0;
+                match funct7 >> 2 {
+                    _ => Err(Error::UnsupportedInst(inst))?
+                }
+            },
             _ => Err(Error::UnsupportedInst(inst))?
         }
 
