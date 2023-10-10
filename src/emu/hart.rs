@@ -1,20 +1,86 @@
 use super::*;
 
+#[allow(dead_code)]
+pub const REG_RA : usize = 0;
+#[allow(dead_code)]
+pub const REG_SP : usize = 1;
+#[allow(dead_code)]
+pub const REG_GP : usize = 2;
+#[allow(dead_code)]
+pub const REG_TP : usize = 3;
+#[allow(dead_code)]
+pub const REG_T0 : usize = 4;
+#[allow(dead_code)]
+pub const REG_T1 : usize = 5;
+#[allow(dead_code)]
+pub const REG_T2 : usize = 6;
+#[allow(dead_code)]
+pub const REG_S0 : usize = 7;
+#[allow(dead_code)]
+pub const REG_S1 : usize = 8;
+#[allow(dead_code)]
+pub const REG_A0 : usize = 9;
+#[allow(dead_code)]
+pub const REG_A1 : usize = 10;
+#[allow(dead_code)]
+pub const REG_A2 : usize = 11;
+#[allow(dead_code)]
+pub const REG_A3 : usize = 12;
+#[allow(dead_code)]
+pub const REG_A4 : usize = 13;
+#[allow(dead_code)]
+pub const REG_A5 : usize = 14;
+#[allow(dead_code)]
+pub const REG_A6 : usize = 15;
+#[allow(dead_code)]
+pub const REG_A7 : usize = 16;
+#[allow(dead_code)]
+pub const REG_S2 : usize = 17;
+#[allow(dead_code)]
+pub const REG_S3 : usize = 18;
+#[allow(dead_code)]
+pub const REG_S4 : usize = 19;
+#[allow(dead_code)]
+pub const REG_S5 : usize = 20;
+#[allow(dead_code)]
+pub const REG_S6 : usize = 21;
+#[allow(dead_code)]
+pub const REG_S7 : usize = 22;
+#[allow(dead_code)]
+pub const REG_S8 : usize = 23;
+#[allow(dead_code)]
+pub const REG_S9 : usize = 24;
+#[allow(dead_code)]
+pub const REG_S10: usize = 25;
+#[allow(dead_code)]
+pub const REG_S11: usize = 26;
+#[allow(dead_code)]
+pub const REG_T3 : usize = 27;
+#[allow(dead_code)]
+pub const REG_T4 : usize = 28;
+#[allow(dead_code)]
+pub const REG_T5 : usize = 29;
+#[allow(dead_code)]
+pub const REG_T6 : usize = 30;
+
 #[derive(Debug)]
-pub struct CPU<'a> {
+pub struct Core<'a> {
     reg: [u64; 31],
     pc : u64,
-    bus: &'a mut Bus
+    bus: &'a mut Bus,
+
+    pub id: u64
 }
 
-impl<'a> CPU<'a> {
-    pub fn new(bus: &'a mut Bus) -> Self {
+impl<'a> Core<'a> {
+    pub fn new(bus: &'a mut Bus, id: u64) -> Self {
         let mut reg = [0; 31];
-        reg[1] = DRAM_SIZE as u64 + DRAM_BASE; // x2 (sp)
+        reg[REG_SP] = DRAM_SIZE as u64 + DRAM_BASE;
         Self {
             reg,
             pc : DRAM_BASE,
-            bus
+            bus,
+            id
         }
     }
 
@@ -30,7 +96,8 @@ impl<'a> CPU<'a> {
         }
     }
 
-    const ABI_REGS: [&str; 31] = [
+
+    const ABI_REGS: [&'static str; 31] = [
         "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0",
         "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5",
         "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6",

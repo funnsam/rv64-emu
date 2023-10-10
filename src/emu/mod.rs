@@ -1,5 +1,5 @@
-pub mod cpu;
-pub use cpu::*;
+pub mod hart;
+pub use hart::*;
 pub mod bus;
 pub use bus::*;
 pub mod devices;
