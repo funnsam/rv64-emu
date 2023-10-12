@@ -63,7 +63,6 @@ pub const REG_T5 : usize = 29;
 #[allow(dead_code)]
 pub const REG_T6 : usize = 30;
 
-#[derive(Debug)]
 pub struct Core<'a> {
     reg: [u64; 31],
     pc : u64,
@@ -118,7 +117,7 @@ impl<'a> Core<'a> {
     #[must_use]
     pub fn cycle(&mut self) -> Result<()> {
         let i = self.fetch()?;
-        println!("{i:08x}");
+        // println!("{i:07x}");
         self.pc += 4;
         self.execute(i)
     }
@@ -203,7 +202,8 @@ impl<'a> Core<'a> {
                 let a = self.read_reg(rs1);
                 let b = i_imm_s;
                 let shamt = (b & 0x3f) as u32;
-                self.write_reg(rd, match (funct3, funct7) {
+
+                self.write_reg(rd, match (funct3, funct7 >> 1) {
                     (ADD , _) => a + b,
                     (SLT , _) => ((a as i64) < b as i64) as u64,
                     (SLTU, _) => (a < b) as u64,
@@ -212,7 +212,7 @@ impl<'a> Core<'a> {
                     (AND , _) => a & b,
                     (SLL , 0x00) => a << shamt,
                     (SRX , 0x00) => a >> shamt,
-                    (SRX , 0x20) => (a as i64 >> shamt) as u64,
+                    (SRX , 0x10) => (a as i64 >> shamt) as u64,
                     _ => Err(Error::UnsupportedInst(inst))?,
                 })
             },
