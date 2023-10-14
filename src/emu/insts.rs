@@ -1,15 +1,16 @@
-pub const LUI  : u32 = 0x37;
-pub const AUIPC: u32 = 0x17;
-pub const JAL  : u32 = 0x6F;
-pub const JALR : u32 = 0x67;
-pub const BCOND: u32 = 0x63;
-pub const LOAD : u32 = 0x03;
-pub const STOR : u32 = 0x23;
-pub const ALUI : u32 = 0x13;
-pub const ALU  : u32 = 0x33;
-pub const ALUIW: u32 = 0x1B;
-pub const ALUW : u32 = 0x3B;
-pub const AMO  : u32 = 0x2F;
+pub const LUI       : u32 = 0x37;
+pub const AUIPC     : u32 = 0x17;
+pub const JAL       : u32 = 0x6F;
+pub const JALR      : u32 = 0x67;
+pub const BCOND     : u32 = 0x63;
+pub const LOAD      : u32 = 0x03;
+pub const STOR      : u32 = 0x23;
+pub const ALUI      : u32 = 0x13;
+pub const ALU       : u32 = 0x33;
+pub const ALUIW     : u32 = 0x1B;
+pub const ALUW      : u32 = 0x3B;
+pub const AMO       : u32 = 0x2F;
+pub const MISC_MEM  : u32 = 0x0F;
 
 // load and store
 pub const B : u32 = 0x0;
@@ -52,3 +53,6 @@ pub const AMOMIN : u32 = 0x10;
 pub const AMOMAX : u32 = 0x14;
 pub const AMOMINU: u32 = 0x18;
 pub const AMOMAXU: u32 = 0x1C;
+
+// MISC-MEM
+pub const FENCE: u32 = 0x0;
